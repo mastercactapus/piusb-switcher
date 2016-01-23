@@ -27,6 +27,9 @@ var (
 )
 
 func run(cmd *cobra.Command, args []string) {
+	if pin == 0 {
+		log.Fatalln("Pin number is required")
+	}
 	a = raspi.NewRaspiAdaptor("raspi")
 	err := a.DigitalWrite(strconv.Itoa(pin), 0)
 	if err != nil {
@@ -63,7 +66,7 @@ func setState(newState int) {
 }
 
 func main() {
-	mainCmd.Flags().IntVarP(&pin, "pin", "p", 14, "Pin number. Pin used to toggle the usb switcher")
+	mainCmd.Flags().IntVarP(&pin, "pin", "p", 0, "Physical pin number. Pin used to toggle the usb switcher.")
 	mainCmd.Flags().IntVarP(&stateCount, "state-count", "c", 4, "Number of states. This should equal the number of states on the USB switch.")
 	mainCmd.Flags().DurationVarP(&delay, "delay", "d", time.Millisecond*50, "Toggle delay. Time between switch toggles.")
 	mainCmd.Flags().StringVarP(&bindAddr, "bind-address", "b", ":8080", "Bind address. The address:port to bind to for HTTP requests.")
